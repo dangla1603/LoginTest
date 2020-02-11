@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class RegistrationActivity extends AppCompatActivity {
 
@@ -39,11 +40,11 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                validate2();
+            validate2();
 
                 if(validate2()){
 
-                    //Upload data to the database
+                        //Upload data to the database
                     String user_email = userEmail.getText().toString().trim();
                     String user_password = userPassword.getText().toString().trim();
 
@@ -52,11 +53,11 @@ public class RegistrationActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
                             if(task.isSuccessful()){
-                                //sendEmailVerification();
-                                firebaseAuth.signOut();
-                                Toast.makeText(RegistrationActivity.this, "Successfully Registered, Upload complete!", Toast.LENGTH_SHORT).show();
-                                finish();
-                                startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+                                //firebaseAuth.signOut();
+                                //finish();
+                                //Toast.makeText(RegistrationActivity.this, "Successfully Registered, Upload complete!", Toast.LENGTH_SHORT).show();
+                                //startActivity(new Intent(RegistrationActivity.this, MainActivity.class));
+                                sendEmailVerification();
                             }else{
                                 Toast.makeText(RegistrationActivity.this, "Registration Failed", Toast.LENGTH_SHORT).show();
                             }
@@ -80,7 +81,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     }
 
-    private void setupUIView(){
+       private void setupUIView(){
         userName = (EditText)findViewById(R.id.etUserName);
         userPassword = (EditText)findViewById(R.id.etUserPassord);
         userEmail = (EditText)findViewById(R.id.etUserEmail);
@@ -98,7 +99,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
         if(name.isEmpty() && password.isEmpty() && email.isEmpty() ){
-            Toast.makeText(this,"enter details",Toast.LENGTH_SHORT).show();
+          Toast.makeText(this,"enter details",Toast.LENGTH_SHORT).show();
         }else{
             result = true;
         }
@@ -107,5 +108,25 @@ public class RegistrationActivity extends AppCompatActivity {
 
     }
 
+
+    private void sendEmailVerification(){
+         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        if(firebaseUser != null){
+            firebaseUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task.isSuccessful()){
+                        Toast.makeText(RegistrationActivity.this,"Successfully Register, Please Verify your email!",Toast.LENGTH_SHORT).show();
+                        firebaseAuth.signOut();
+                        finish();
+                        startActivity(new Intent(RegistrationActivity.this,MainActivity.class));
+                    }else {
+                        Toast.makeText(RegistrationActivity.this,"Verification mail has not been sent!",Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+            });
+        }
+    }
 
 }

@@ -4,37 +4,31 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.view.View;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import java.util.ArrayList;
+
 public class Camera extends AppCompatActivity {
 
-    Button clk;
-    VideoView videov;
-    MediaController mediaC;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_camera);
 
-        clk =(Button) findViewById(R.id.button);
-        videov = (VideoView) findViewById(R.id.videoView);
-        mediaC = new MediaController(this);
+        VideoView videoView = findViewById(R.id.videoview);
 
 
-    }
+        String videoPath = "android.resource://" + getPackageName() + "/" + R.raw.example;
+        Uri uri = Uri.parse(videoPath);
+        videoView.setVideoURI(uri);
 
-    public void videoplay (View v){
-        String videopath = "android.resource://com.example.justcamera/" + R.raw.example;
-        Uri uri = Uri.parse(videopath);
-        videov.setVideoURI(uri);
-        videov.setMediaController(mediaC);
-        mediaC.setAnchorView(videov);
-        videov.start();
-
+        MediaController mediaController = new MediaController(this);
+        videoView.setMediaController(mediaController);
+        mediaController.setAnchorView(videoView);
     }
 }

@@ -78,16 +78,17 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth.signInWithEmailAndPassword(userName, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     progressDialog.dismiss();
-                    Toast.makeText(MainActivity.this,"Login Sucessful",Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(MainActivity.this,SecondActivity.class));
-                }else{
-                    Toast.makeText(MainActivity.this,"Login Failed",Toast.LENGTH_SHORT).show();
+
+                    // Toast.makeText(MainActivity.this,"Login Sucessful",Toast.LENGTH_SHORT).show();
+                    checkEmailVerification();
+                } else {
+                    Toast.makeText(MainActivity.this, "Login Failed", Toast.LENGTH_SHORT).show();
                     counter--;
                     Info.setText("number of attempts remaining: " + counter);
                     progressDialog.dismiss();
-                    if(counter == 0){
+                    if (counter == 0) {
                         Login.setEnabled(false);
                     }
                 }
@@ -96,11 +97,27 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public int getCounter() {
-        return counter;
-    }
 
-    public void setCounter(int counter) {
-        this.counter = counter;
-    }
+        private void checkEmailVerification(){
+            FirebaseUser firebaseUser = firebaseAuth.getInstance().getCurrentUser();
+            Boolean emailflag = firebaseUser.isEmailVerified();
+
+            if (emailflag){
+                finish();
+                startActivity(new Intent(MainActivity.this, SecondActivity.class));
+
+            }else {
+                Toast.makeText(this,"Verify your email", Toast.LENGTH_SHORT).show();
+                firebaseAuth.signOut();
+            }
+        }
+
+
+
+
+
+
+
+
+
 }
