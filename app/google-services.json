@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "218263614953",
+    "firebase_url": "https://klvin-a439c.firebaseio.com",
+    "project_id": "klvin-a439c",
+    "storage_bucket": "klvin-a439c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218263614953:android:270da05c8137fbf0f8c778",
+        "android_client_info": {
+          "package_name": "com.example.logintest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "218263614953-0g4cj7jumq1d6s9blcp02rp4eo3cvb1q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDG5eM3EY3-i4G1NZzjA8RAxwoKuuAFxo0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "218263614953-0g4cj7jumq1d6s9blcp02rp4eo3cvb1q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
