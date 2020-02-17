@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">218263614953-0g4cj7jumq1d6s9blcp02rp4eo3cvb1q.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://klvin-a439c.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">218263614953</string>
+    <string name="google_api_key" translatable="false">AIzaSyDG5eM3EY3-i4G1NZzjA8RAxwoKuuAFxo0</string>
+    <string name="google_app_id" translatable="false">1:218263614953:android:270da05c8137fbf0f8c778</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDG5eM3EY3-i4G1NZzjA8RAxwoKuuAFxo0</string>
+    <string name="google_storage_bucket" translatable="false">klvin-a439c.appspot.com</string>
+    <string name="project_id" translatable="false">klvin-a439c</string>
+</resources>
