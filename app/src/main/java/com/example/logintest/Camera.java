@@ -56,6 +56,7 @@ public class Camera extends AppCompatActivity {
                         break;
                     /* NOTE: 
                     case "video-2020_2_18.mp4":
+                            *check if the file is already exist. if not:*
                             tcp send_command("/GET video-2020_2_18.mp4") 
                             -> file write to sd card with the same name 
                             *wait for file to download*
