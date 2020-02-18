@@ -25,6 +25,9 @@ public class Camera extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
+        getSupportActionBar().setTitle("Back");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         final VideoView videoView = findViewById(R.id.videoview);
         listView =  findViewById(R.id.lvideo);

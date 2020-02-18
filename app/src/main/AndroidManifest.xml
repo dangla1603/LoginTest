@@ -13,9 +13,11 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Status"
-            android:label="@string/title_activity_status"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".Camera" />
+
+
+            android:parentActivityName=".SecondActivity"></activity>
+        <activity android:name=".Camera"
+            android:parentActivityName=".SecondActivity"/>
         <activity android:name=".RegistrationActivity" />
         <activity android:name=".SecondActivity" />
         <activity android:name=".MainActivity">

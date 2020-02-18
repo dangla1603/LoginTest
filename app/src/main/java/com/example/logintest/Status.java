@@ -47,6 +47,9 @@ public class Status extends AppCompatActivity {
         btn = findViewById(R.id.button);
         //um = findViewById(R.id.editText4);
 
+        getSupportActionBar().setTitle("Back");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         // data = pi.send_command(QUERY_TEMPERATURE_DATA);
 
