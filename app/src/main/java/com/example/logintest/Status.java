@@ -1,5 +1,6 @@
 package com.example.logintest;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -38,6 +39,7 @@ public class Status extends AppCompatActivity {
     private Socket s;
     TextView txt;
     Button btn;
+    Activity activity_ctx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,27 +52,15 @@ public class Status extends AppCompatActivity {
         getSupportActionBar().setTitle("Back");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-        // data = pi.send_command(QUERY_TEMPERATURE_DATA);
+        activity_ctx = this;
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //System.out.println(data);
 
                 String QUERY_TEMPERATURE_DATA = "2";                    // send signal " command 2 " to pi
 
-                // String QUERY_EVENTS_DATA = "10";
-                //String data;
-                TCPClient pi = new TCPClient("192.168.1.4", 8000);
-
-                pi.execute(QUERY_TEMPERATURE_DATA);
-                // pi.execute(QUERY_EVENTS_DATA);                      // might make another class to funtction the commands
-                while (!pi.isReady()) {
-
-                }
-
-                txt.setText(pi.get_value());
+                new TCPClient("192.168.1.4", 8000, activity_ctx).execute(QUERY_TEMPERATURE_DATA);
 
             }
         });

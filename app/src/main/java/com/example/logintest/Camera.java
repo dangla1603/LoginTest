@@ -1,7 +1,11 @@
 package com.example.logintest;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -12,63 +16,78 @@ import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.io.File;
 import java.util.ArrayList;
+
 
 public class Camera extends AppCompatActivity {
 
     ListView listView;
     ArrayList<String> videoList;
     ArrayAdapter adapter;
+    VideoView videoView;
+
+    Activity activity_ctx;
+
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_camera);
+        activity_ctx = this;
+
         getSupportActionBar().setTitle("Back");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        // request permission
+        verifyStoragePermissions(activity_ctx);
 
-        final VideoView videoView = findViewById(R.id.videoview);
+        setContentView(R.layout.activity_camera);
+        videoView = findViewById(R.id.videoview);
         listView =  findViewById(R.id.lvideo);
-        videoList = new ArrayList<>();                  // Make ArrayList for video
-        // TODO: tcp send_command -> string -> list of available files -> for loop videoList.add() 
-        videoList.add("video");
-        videoList.add("video1");
-        videoList.add("video2");
-        videoList.add("video3");
 
-        adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,videoList);
-        listView.setAdapter(adapter);
+
+        String QUERY_LIST = "7";
+        new TCPClient("192.168.1.4", 8000, activity_ctx).execute(QUERY_LIST);
+
+        videoView.setMediaController(new MediaController(Camera.this));             //add MediaController for the video
+        videoView.requestFocus();
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //Toast.makeText(getApplicationContext(),position+"",Toast.LENGTH_SHORT).show();
-                
-                // NOTE: if possible try to get the URI path based on the name of the clicked element instead of index 
-                switch (position){                                                                              // Make the list of VideoView
- 
-                    case 0:
-                        videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName()+ "/" +R.raw.example));
-                        break;
-                    case 1:
-                        videoView.setVideoURI(Uri.parse("android.resource://" + getPackageName()+"/" +R.raw.video));
-                        break;
-                    /* NOTE: 
-                    case "video-2020_2_18.mp4":
-                            tcp send_command("/GET video-2020_2_18.mp4") 
-                            -> file write to sd card with the same name 
-                            *wait for file to download*
-                            -> videoView.setVideoURI(URI.parse("the path we just write to"))
-                    */
-                }
-                videoView.setMediaController(new MediaController(Camera.this));             //add MediaController for the video
-                videoView.requestFocus();
-                videoView.start();
+
+                String selected_file = listView.getItemAtPosition(position).toString();
+
+                Toast.makeText(getApplicationContext(),"Preparing "+ selected_file,Toast.LENGTH_SHORT).show();
+
+                String QUERY_VIDEO = "6";
+                String GET_VIDEO = "16";
+
+                new TCPClient("192.168.1.4", 8000,activity_ctx).execute(GET_VIDEO,selected_file,activity_ctx);
 
             }
         });
-
 
 
 
