@@ -17,6 +17,7 @@ public class SecondActivity extends AppCompatActivity {
     private Button Temperature;
     private Button Status;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +52,15 @@ public class SecondActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SecondActivity.this,Status.class));
+            }
+        });
+
+        Temperature = (Button) findViewById(R.id.btnTemperature);
+
+        Temperature.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SecondActivity.this,Temperature.class));
             }
         });
     }
