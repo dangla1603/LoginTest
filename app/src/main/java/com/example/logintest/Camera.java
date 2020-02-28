@@ -5,26 +5,29 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.content.pm.PackageManager;
+
+import android.app.ProgressDialog;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.MediaController;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import android.widget.Toast;
 import android.widget.VideoView;
-
-import java.io.File;
-import java.util.ArrayList;
+import android.widget.MediaController;
 
 
 public class Camera extends AppCompatActivity {
 
     ListView listView;
     ArrayList<String> videoList;
-    ArrayAdapter adapter;
+    ArrayAdapter<String> adapter;
     VideoView videoView;
 
     Activity activity_ctx;
@@ -56,9 +59,6 @@ public class Camera extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         activity_ctx = this;
 
-        getSupportActionBar().setTitle("Back");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         // request permission
         verifyStoragePermissions(activity_ctx);
 
@@ -67,11 +67,20 @@ public class Camera extends AppCompatActivity {
         listView =  findViewById(R.id.lvideo);
 
 
-        String QUERY_LIST = "7";
-        new TCPClient("192.168.1.4", 8000, activity_ctx).execute(QUERY_LIST);
+        // Back button
+        getSupportActionBar().setTitle("Back");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         videoView.setMediaController(new MediaController(Camera.this));             //add MediaController for the video
-        videoView.requestFocus();
+        MediaController mediaController = new MediaController(activity_ctx);
+        mediaController.setAnchorView(videoView);
+
+
+        // Query available files on the server.
+        String QUERY_LIST = "7";
+        new server_connection().execute(QUERY_LIST);
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -81,22 +90,73 @@ public class Camera extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(),"Preparing "+ selected_file,Toast.LENGTH_SHORT).show();
 
-                String QUERY_VIDEO = "6";
-                String GET_VIDEO = "16";
-
-                new TCPClient("192.168.1.4", 8000,activity_ctx).execute(GET_VIDEO,selected_file,activity_ctx);
+                String VIDEO_GET_REQUEST = "16";
+                new server_connection().execute(VIDEO_GET_REQUEST,selected_file,activity_ctx);
 
             }
         });
 
 
 
-       /* String videoPath = "android.resource://" + getPackageName() + "/" + R.raw.example;
+       /*
+        String videoPath = "android.resource://" + getPackageName() + "/" + R.raw.example;
         Uri uri = Uri.parse(videoPath);
         videoView.setVideoURI(uri);
 
         MediaController mediaController = new MediaController(this);
         videoView.setMediaController(mediaController);
         mediaController.setAnchorView(videoView); */
+    }
+
+    // Async network procedure for Camera.java
+    private class server_connection extends AsyncTask<Object, Void, Object> {
+
+        ProgressDialog progress = new ProgressDialog(activity_ctx);
+
+        String command = "-1";
+
+        @Override
+        protected Object doInBackground(Object... voids){
+            TCPClient pi = new TCPClient("192.168.1.3", 8000, activity_ctx);
+            command = (String) voids[0];
+
+            // Query list of available files. Received data is string value
+            if ( command.equals("7") ) {
+                return pi.send_command(command);
+            }
+
+            // Send GET request of the selected videofile. Return the storage path to the downloaded file.
+            if (command.equals("16") ){
+                String filename = (String)voids[1];
+                String REQUEST = "GET /videos/"+filename;
+                return pi.send_command_video(REQUEST, filename,activity_ctx);
+            }
+
+            return null;
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+            // Display loading annimation
+        }
+
+        @Override
+        protected void onPostExecute(Object result) {
+            // Put data on list view
+            if ( command.equals("7") ) {
+
+                videoList = new ArrayList<>( Arrays.asList( ((String) result).split(" ") ) );
+                adapter = new ArrayAdapter<>(activity_ctx, android.R.layout.simple_list_item_1, videoList);
+                listView.setAdapter(adapter);
+
+            }
+
+            // Prepare URI for videoview.
+            if (command.equals("16") ){
+                String filepath = (String) result;
+                videoView.setVideoPath(filepath);
+                videoView.requestFocus();
+            }
+        }
+
     }
 }

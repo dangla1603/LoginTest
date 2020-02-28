@@ -1,42 +1,18 @@
 package com.example.logintest;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.Activity;
 import android.os.Bundle;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
-
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
+import android.app.ProgressDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.net.Socket;
 
 public class Status extends AppCompatActivity {
-    private Socket s;
     TextView txt;
     Button btn;
     Activity activity_ctx;
@@ -44,27 +20,49 @@ public class Status extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity_ctx = this;
+
         setContentView(R.layout.activity_status);
         txt = findViewById(R.id.editText);
         btn = findViewById(R.id.button);
-        //um = findViewById(R.id.editText4);
 
         getSupportActionBar().setTitle("Back");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        activity_ctx = this;
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 String QUERY_TEMPERATURE_DATA = "2";                    // send signal " command 2 " to pi
-
-                new TCPClient("192.168.1.4", 8000, activity_ctx).execute(QUERY_TEMPERATURE_DATA);
+                new server_connection().execute(QUERY_TEMPERATURE_DATA);
 
             }
         });
 
 
+    }
+
+
+    // Async network procedure for Status.java
+    private class server_connection extends AsyncTask<Object, Void, Object>{
+
+        ProgressDialog progress = new ProgressDialog(activity_ctx);
+
+        @Override
+        protected Object doInBackground(Object... voids){
+            TCPClient pi = new TCPClient("192.168.1.3", 8000, activity_ctx);
+            return pi.send_command((String)voids[0]);
+        }
+
+        protected void onProgressUpdate(Integer... progress) {
+            // Display loading annimation
+        }
+
+        @Override
+        protected void onPostExecute(Object result) {
+            txt.setText((String)result);
+
+        }
     }
 }
