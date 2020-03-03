@@ -6,6 +6,7 @@ package com.example.logintest;
         import android.os.Bundle;
         import android.view.View;
         import android.widget.Button;
+        import android.widget.ImageView;
 
         import com.google.firebase.auth.FirebaseAuth;
 
@@ -13,9 +14,9 @@ public class SecondActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     private Button logout;
-    private Button Camera;
-    private Button Temperature;
-    private Button Status;
+    private ImageView Camera;
+    private ImageView Temperature;
+    private ImageView Status;
 
 
     @Override
@@ -37,7 +38,7 @@ public class SecondActivity extends AppCompatActivity {
         });
 
 
-        Camera = (Button) findViewById(R.id.btnCamera);
+        Camera = (ImageView) findViewById(R.id.btnCamera);
 
         Camera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,7 +47,7 @@ public class SecondActivity extends AppCompatActivity {
             }
         });
 
-        Status = (Button) findViewById(R.id.btnStatus);
+        Status = (ImageView) findViewById(R.id.btnStatus);
 
         Status.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +56,7 @@ public class SecondActivity extends AppCompatActivity {
             }
         });
 
-        Temperature = (Button) findViewById(R.id.btnTemperature);
+        Temperature = (ImageView) findViewById(R.id.btnTemperature);
 
         Temperature.setOnClickListener(new View.OnClickListener() {
             @Override
