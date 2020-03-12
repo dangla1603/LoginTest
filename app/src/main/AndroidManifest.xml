@@ -14,20 +14,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Temperature"
-            android:parentActivityName=".SecondActivity"
-            ></activity>
+        <activity
+            android:name=".Temperature"
+            android:parentActivityName=".SecondActivity" />
         <activity
             android:name=".Status"
             android:parentActivityName=".SecondActivity" />
         <activity
             android:name=".Camera"
-            android:parentActivityName=".SecondActivity"
-            />
+            android:parentActivityName=".SecondActivity" />
         <activity android:name=".RegistrationActivity" />
-        <activity android:name=".SecondActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".SecondActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
